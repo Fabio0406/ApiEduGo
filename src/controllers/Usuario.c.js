@@ -3,6 +3,8 @@ import helpers from '../lib/helpers.js';
 
 export const IniciarSP = async (req, res) => {
     try {
+
+        console.log(req.body)
         const {usua,contrasena} = req.body
         const Buser = await consul.query('SELECT usua,pasajero,conductor,contraseña FROM Usuario where usua = $1',[usua])
         if(Buser.rowCount > 0){
