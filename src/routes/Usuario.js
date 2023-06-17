@@ -18,8 +18,8 @@ export const storage = multer.diskStorage({
 const usua = Router();
 const upload = multer({storage})
 
-usua.get('/IniciarSP',IniciarSP)
-usua.get('/IniciarSC',IniciarSC)
+usua.post('/IniciarSP',IniciarSP)
+usua.post('/IniciarSC',IniciarSC)
 usua.post('/RegisP',upload.single("foto"),RegitrarP)
 usua.post('/RegisC',upload.single("foto"),RegitrarC)
 
