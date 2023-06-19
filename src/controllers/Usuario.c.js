@@ -51,25 +51,25 @@ export const IniciarSC = async (req, res) => {
 
 export const RegitrarP = async (req, res) => {
     try {
-        console.log(req.body)
-        const {usua,registro,correo,nombre,telefono,contrasena} = req.body
-        const contra = await helpers.encriptar(contrasena)
+        const {usua,registro,correo,nombre,telefono,contraseña} = req.body
+        const contra = await helpers.encriptar(contraseña)
         const foto = "asdasdasd"
         const Buser = await consul.query('SELECT usua,pasajero,conductor FROM Usuario where usua = $1',[usua])
         if(Buser.rowCount > 0){
             if(Buser.rows[0].pasajero == true || Buser.rows[0].conductor == true){
+                console.log("si pasa")
                 res.status(200).json("Usuario ya esta registrado")                
             }            
         }else{
             const pasajero = true
             const conductor = false
             const resp = await consul.query('INSERT INTO Usuario (usua, registro, correo, nombre, telefono, contraseña, foto, pasajero, conductor) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)',[usua,registro,correo,nombre,telefono,contra,foto,pasajero,conductor])
-            console.log(resp.command)
             res.status(200).json("Se Registro con exito")
         }
         return    
     } catch (error) {
-        res.send(error)
+        console.log(error)
+        res.send()     
     }
 }
 
