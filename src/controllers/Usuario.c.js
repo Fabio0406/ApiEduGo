@@ -51,9 +51,9 @@ export const IniciarSC = async (req, res) => {
 
 export const RegitrarP = async (req, res) => {
     try {
+        console.log(req.body)
         const {usua,registro,correo,nombre,telefono,contrasena} = req.body
         const contra = await helpers.encriptar(contrasena)
-        console.log(contra)
         const foto = req.file.filename
         const Buser = await consul.query('SELECT usua,pasajero,conductor FROM Usuario where usua = $1',[usua])
         if(Buser.rowCount > 0){
