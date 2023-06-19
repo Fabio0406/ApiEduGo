@@ -1,5 +1,5 @@
 import { Router } from "express"
-import {IniciarSC, IniciarSP, RegitrarC, RegitrarP } from "../controllers/Usuario.c.js";
+import {IniciarSC, IniciarSP, RegitrarB, RegitrarC, RegitrarP, RegitrarV } from "../controllers/Usuario.c.js";
 import {dirname, join} from 'path';
 import {fileURLToPath} from 'url';
 import multer from 'multer';
@@ -22,5 +22,7 @@ usua.post('/IniciarSP',IniciarSP)
 usua.post('/IniciarSC',IniciarSC)
 usua.post('/RegisP',upload.single("foto"),RegitrarP)
 usua.post('/RegisC',upload.single("foto"),RegitrarC)
+usua.post('/RegisB',upload.single("foto"),RegitrarB)
+usua.post('/RegisV',upload.single("foto"),RegitrarV)
 
 export default usua
