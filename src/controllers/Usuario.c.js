@@ -20,6 +20,28 @@ export const IniciarSP = async (req, res) => {
     }
 }
 
+export const refresh = async (req, res) => {
+    try {
+        const {usua,ci} = req.params
+        const{longitud , latitud} = req.body
+        await consul.query('UPDATE Conductor SET longitud = $1 , latitud = $2  WHERE ci = $3 AND usua = $4 ',[longitud,latitud,ci,usua])
+        res.status(200).json("se actualizo")   
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+export const estado = async (req, res) => {
+    try {
+        const {usua,ci} = req.params
+        const{estado} = req.body
+        await consul.query('UPDATE Conductor SET estado = $1  WHERE ci = $3 AND usua = $4 ',[estado,ci,usua])
+        res.status(200).json("se actualizo")   
+    } catch (error) {
+        res.send(error)
+    }
+}
+
 export const IniciarSC = async (req, res) => {
     try {
         const {usua,contrasena} = req.body
