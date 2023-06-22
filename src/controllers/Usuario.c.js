@@ -46,6 +46,31 @@ export const estado = async (req, res) => {
     }
 }
 
+export const Añadir = async (req, res) => {
+    try {
+        const {longitud_origen, latitud_origen, longitud_destino, latitud_destino, hora, monto, conductor} = req.body
+        const resp = await consul.query('INSERT INTO solicitud (longitud_origen, latitud_origen, longitud_destino, latitud_destino, hora, monto, conductor) VALUES ($1,$2,$3,$4,$5,$6,$7)',[longitud_origen, latitud_origen, longitud_destino, latitud_destino, hora, monto, conductor])
+        res.status(200).json("Se Registro con exito")        
+        return    
+    } catch (error) {
+        console.log(error)
+        res.send()     
+    }
+}
+
+export const solicitudes = async (req, res) => {
+    try {
+        const resp = await consul.query('SELECT s.id, s.longitud_origen, s.latitud_origen, s.longitud_destino, s.latitud_destino, s.hora, s.monto,c.ci, u.nombre, v.modelo FROM solicitud s, Conductor c, Usuario u, vehiculo v WHERE s.conductor = c.ci AND c.usua = u.usua AND c.ci = v.ci_conductor AND c.estado = TRUE',[longitud_origen, latitud_origen, longitud_destino, latitud_destino, hora, monto, conductor])
+        res.status(200).json(resp.rows)        
+        return    
+    } catch (error) {
+        console.log(error)
+        res.send()     
+    }
+}
+
+//INSERT INTO solicitud (longitud_origen, latitud_origen, longitud_destino, latitud_destino, hora, monto, conductor)VALUES (37.7749, -122.4194, 37.3352, -121.8811, '2023-06-22 10:30:00', 50.00, 123456);
+
 export const IniciarSC = async (req, res) => {
     try {
         const {usua,contrasena} = req.body
@@ -79,7 +104,7 @@ export const RegitrarP = async (req, res) => {
     try {
         const {usua,registro,correo,nombre,telefono,contraseña} = req.body
         const contra = await helpers.encriptar(contraseña)
-        const foto = "asdasdasd"
+        const foto = "default"
         const Buser = await consul.query('SELECT usua,pasajero,conductor FROM Usuario where usua = $1',[usua])
         if(Buser.rowCount > 0){
             if(Buser.rows[0].pasajero == true || Buser.rows[0].conductor == true){
@@ -103,23 +128,22 @@ export const RegitrarC = async (req, res) => {
     try {
         const {usua,registro,correo,nombre,telefono,contrasena} = req.body
         const contra = await helpers.encriptar(contrasena)
-        const foto = req.file.filename
+        const foto = "default.jpg"
         const Buser = await consul.query('SELECT usua,pasajero,conductor FROM usuario where usua = $1',[usua])
         if(Buser.rowCount > 0){
             if(Buser.rows[0].pasajero == true && Buser.rows[0].conductor == true){
-                res.status(200).json("Usuario ya esta registrado")   
+                res.status(200).json("3")   
             }
             if(Buser.rows[0].pasajero == true && Buser.rows[0].conductor == false){
-                res.status(200).json("Usuario ya esta registrado solo Registre sus Vehiculo y brevet")   
+                res.status(200).json("1")   
             }
             if(Buser.rows[0].pasajero == false && Buser.rows[0].conductor == true){
-                res.status(200).json("Usuario ya esta registrado como conductor")   
+                res.status(200).json("0")   
             }
         }else{
             const conductor = true
             const resp = await consul.query('INSERT INTO Usuario (usua, registro, correo, nombre, telefono, contraseña, foto, conductor) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)',[usua,registro,correo,nombre,telefono,contra,foto,conductor])
-            //await consul.query('INSERT INTO conductor (usua, ci) VALUES ($1 , $2)',[usua,ci])
-            res.status(200).json("Se Registro con exito")
+            res.status(200).json("2")
         }      
         return
     } catch (error) {
@@ -130,7 +154,7 @@ export const RegitrarC = async (req, res) => {
 export const RegitrarB = async (req, res) => {
     try {
         const {numero,fecha_e,fecha_v,categoria,usua} = req.body
-        const foto = req.file.filename
+        const foto = "default.jpg"
         const Buser = await consul.query('SELECT numero FROM brevet where numero = $1',[numero])
         if(Buser.rowCount > 0){
             res.status(200).json("Ya Registrado")
@@ -152,7 +176,7 @@ export const RegitrarB = async (req, res) => {
 export const RegitrarV = async (req, res) => {
     try {
         const {placa,modelo,año,capacidad,extra,ci} = req.body
-        const foto = req.file.filename
+        const foto = "default.jpg"
         const Buser = await consul.query('SELECT * FROM vehiculo where placa = $1',[placa])
         if(Buser.rowCount > 0){
             res.status(200).json("Este Vehiculo esta Registrado")
