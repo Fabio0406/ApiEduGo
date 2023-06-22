@@ -26,7 +26,9 @@ export const refresh = async (req, res) => {
         console.log(req.params)
         const {usua,ci} = req.params
         const{longitud , latitud} = req.body
-        await consul.query('UPDATE Conductor SET longitud = $1 , latitud = $2  WHERE ci = $3 AND usua = $4 ',[longitud,latitud,ci,usua])
+        var log = parseFloat(longitud)
+        var lnt = parseFloat(latitud)
+        await consul.query('UPDATE Conductor SET longitud = $1 , latitud = $2  WHERE ci = $3 AND usua = $4 ',[log,lnt,ci,usua])
         res.status(200).json("se actualizo Ubicacion")   
     } catch (error) {
         res.send(error)
