@@ -7,3 +7,4 @@ export const consul = new pkg.Pool({
     database: process.env.DB_DATABASE ||'railway',
     port: process.env.DB_PORT||'7453'
 })
+

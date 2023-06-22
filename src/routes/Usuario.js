@@ -27,6 +27,7 @@ usua.post('/RegisV',upload.single("foto"),RegitrarV)
 usua.post('/posicion/:usaurio/:ci',refresh)
 usua.post('/AñadirS',Añadir)
 usua.get('/solicitudes',solicitudes)
+
 usua.post('/posicion/estado/:usaurio/:ci',estado)
 
 export default usua
